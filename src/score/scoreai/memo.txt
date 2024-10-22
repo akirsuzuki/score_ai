@@ -1,0 +1,24 @@
+def get_debt_list_byAny(summary_field_label, debt_list):
+    summary_field = summary_field_label.strip("'")
+    debt_list_byAny = {}
+
+    for debt in debt_list:
+        if debt[summary_field_label] not in debt_list_byAny:
+            debt_list_byAny[debt[summary_field_label]] = {
+                'principal': 0,
+                'monthly_repayment': 0,
+                'balances_monthly': [0] * 12,  # Initialize with 12 zeros
+                'balance_fy1': 0,
+            }
+
+        debt_list_byAny[debt[summary_field_label]]['principal'] += debt['principal']
+        debt_list_byAny[debt[summary_field_label]]['monthly_repayment'] += debt['monthly_repayment']
+        debt_list_byAny[debt[summary_field_label]]['balance_fy1'] += debt['balance_fy1']
+
+        # Sum up the monthly balances
+        for i in range(12):
+            debt_list_byAny[debt[summary_field_label]]['balances_monthly'][i] += debt['balances_monthly'][i]
+    # Convert the dictionary to a list of dictionaries
+    debt_list_byAny = [{ summary_field_label: summary_field, **values} for summary_field, values in debt_list_byAny.items()]
+
+    return debt_list_byAny

@@ -1,0 +1,18 @@
+# 開発中のトピック
+
+
+## ローカルの確認方法
+
+"コマンド"
+python3 manage.py runserver 0.0.0.0:8000
+
+これで立ち上がる。
+
+## ログイン開発環境
+
+name admin
+admin@example.com
+1234qwer
+
+
+
