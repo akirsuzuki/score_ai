@@ -147,8 +147,8 @@ class StockEventAdmin(admin.ModelAdmin):
     list_display_links = ('fiscal_summary_year', 'name')
     ordering = ('fiscal_summary_year', 'name')
 
-@admin.register(StockEventDetail)
-class StockEventDetailAdmin(admin.ModelAdmin):
+@admin.register(StockEventLine)
+class StockEventLineAdmin(admin.ModelAdmin):
     list_display = ('stock_event', 'stakeholder', 'share_quantity', 'share_type', 'acquisition_price')
     list_display_links = ('stock_event', 'stakeholder')
     ordering = ('stock_event', 'stakeholder')

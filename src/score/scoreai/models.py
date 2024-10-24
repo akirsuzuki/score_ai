@@ -645,7 +645,7 @@ class StockEvent(models.Model):
     def __str__(self):
         return f"{self.fiscal_summary_year.company.name} - {self.fiscal_summary_year.year} - {self.name}"
 
-class StockEventDetail(models.Model):
+class StockEventLine(models.Model):
     stock_event = models.ForeignKey(StockEvent, on_delete=models.CASCADE, related_name='details')
     stakeholder = models.ForeignKey(Stakeholder_name, on_delete=models.PROTECT)
     share_quantity = models.IntegerField("株式数", default=0)

@@ -245,6 +245,11 @@ class StockEventForm(forms.ModelForm):
         }
 
 
+class StockEventLineForm(forms.ModelForm):
+    class Meta:
+        model = StockEventLine
+        fields = ['stakeholder', 'share_quantity', 'share_type', 'acquisition_price', 'memo']
+
 ##########################################################################
 ###                   CSVアップロード機能                                ###
 ##########################################################################

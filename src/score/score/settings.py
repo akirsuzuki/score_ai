@@ -21,7 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+try:
+    from .local_settings import *
+except ImportError:
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY =  os.getenv('SECRET_KEY')
+    # Open AI
+    OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'default_key')
+    # EMAIL_HOST_USER = 'sth' or os.environ['EMAIL_HOST_USER']
+    # EMAIL_HOST_PASSWORD = 'sth' or os.environ['EMAIL_HOST_PASSWORD']
+    # STRIPE_PUBLIC_KEY = 'sth' or os.environ['STRIPE_PUBLIC_KEY']
+    # STRIPE_SECRET_KEY = 'sth' or os.environ['STRIPE_SECRET_KEY']
+    # AWS_ACCESS_KEY_ID = 'sth' or os.environ['AWS_ACCESS_KEY_ID']
+    # AWS_SECRET_ACCESS_KEY = 'sth' or os.environ['AWS_SECRET_ACCESS_KEY']
+    pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -153,8 +166,6 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
-# Open AI
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'default_key')
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

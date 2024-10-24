@@ -43,7 +43,8 @@
             <div class="row align-items-center">
               <div class="col-12">
                 <h4 class="fw-semibold mb-3">{{ monthly_summaries_total.sum_sales|floatformat:0|intcomma }}千円<small>/{{monthly_summaries.0.actual_months_count}}ヶ月</small></h4>
-                <h4 class="fw-semibold mb-3 fs-3">前年同期間：{{ monthly_summaries_total_last_year.sum_sales|floatformat:0|intcomma }}千円</h4>
+                {% if monthly_summaries_total_last_year.year %}
+                  <h4 class="fw-semibold mb-3 fs-3">前年同期間：{{ monthly_summaries_total_last_year.sum_sales|floatformat:0|intcomma }}千円</h4>
                 <div class="d-flex align-items-center mb-3">
                   <span
                   class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
@@ -54,10 +55,13 @@
                   {% else %}
                       <i class="ti ti-arrow-left text-warning"></i>
                   {% endif %}
-                </span>
+                  </span>
                   <p class="text-dark me-1 fs-3 mb-0">{{ monthly_summaries_total.sum_sales|divide:monthly_summaries_total_last_year.sum_sales|multiply:100|floatformat:2 }}%</p>
                   <p class="fs-3 mb-0">前年比</p>
                 </div>
+                {% else %}
+                  <p class="text-danger">前年データがありません</p>
+                {% endif %}
               </div>
               <div class="col-4">
                 <div class="d-flex justify-content-center">
@@ -79,6 +83,7 @@
               <div class="col-12">
                 <p>粗利益</p>
                 <h4 class="fw-semibold mb-3">{{ monthly_summaries_total.sum_gross_profit|floatformat:0|intcomma }}千円<small>/{{monthly_summaries.0.actual_months_count}}ヶ月</small></h4>
+                {% if monthly_summaries_total_last_year.year %}
                 <h4 class="fw-semibold mb-3 fs-3">前年同期間：{{ monthly_summaries_total_last_year.sum_gross_profit|floatformat:0|intcomma }}千円</h4>
                 <div class="d-flex align-items-center mb-3">
                   <span
@@ -95,12 +100,18 @@
                     <span class="text-info">—</span>
                   {% endif %}
                   </span>
-                  <p class="text-dark me-1 fs-3 mb-0">{{ monthly_summaries_total.sum_gross_profit|divide:monthly_summaries_total_last_year.sum_gross_profit|multiply:100|floatformat:2 }}%</p>
-                  <p class="fs-3 mb-0">前年比</p>  
+                  {% if monthly_summaries_total_last_year.year %}
+                    <p class="text-dark me-1 fs-3 mb-0">{{ monthly_summaries_total.sum_gross_profit|divide:monthly_summaries_total_last_year.sum_gross_profit|multiply:100|floatformat:2 }}%</p>
+                    <p class="fs-3 mb-0">前年比</p>
+                  {% endif %}
+                {% else %}
+                  <p class="text-danger">前年データがありません</p>
+                {% endif %}
                 </div>
                 <hr>
                 <p>営業利益</p>
                 <h4 class="fw-semibold mb-3">{{ monthly_summaries_total.sum_operating_profit|floatformat:0|intcomma }}千円<small>/{{monthly_summaries.0.actual_months_count}}ヶ月</small></h4>
+                {% if monthly_summaries_total_last_year.year %}
                 <h4 class="fw-semibold mb-3 fs-3">前年同期間：{{ monthly_summaries_total_last_year.sum_operating_profit|floatformat:0|intcomma }}千円</h4>
                 <div class="d-flex align-items-center mb-3">
                   <span
@@ -117,8 +128,13 @@
                     <span class="text-warning">—</span>
                   {% endif %}
                   </span>
-                  <p class="text-dark me-1 fs-3 mb-0">{{ monthly_summaries_total.sum_operating_profit|divide:monthly_summaries_total_last_year.sum_operating_profit|multiply:100|floatformat:2 }}%</p>
-                  <p class="fs-3 mb-0">前年比</p>  
+                  {% if monthly_summaries_total_last_year.year %} 
+                    <p class="text-dark me-1 fs-3 mb-0">{{ monthly_summaries_total.sum_operating_profit|divide:monthly_summaries_total_last_year.sum_operating_profit|multiply:100|floatformat:2 }}%</p>
+                    <p class="fs-3 mb-0">前年比</p>
+                  {% endif %}
+                {% else %}
+                  <p class="text-danger">前年データがありません</p>
+                {% endif %}
                 </div>
               </div>
               <div class="col-4">

@@ -40,6 +40,7 @@ import random
 import csv, io
 import calendar
 import json
+import requests
 from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import FieldDoesNotExist
@@ -63,7 +64,7 @@ class IndexView(LoginRequiredMixin, SelectedCompanyMixin, generic.TemplateView):
         if form.is_valid():
             user_message = form.cleaned_data['message']
             selected_company = self.get_selected_company()
-            debts = Debt.objects.filter(company=selected_company.company)
+            debts = Debt.objects.filter(company=self.this_company)
 
             # 債務情報を文字列にフォーマット
             debt_info = "\n".join([f"債務{i+1}: {debt.principal}円 (金利: {debt.interest_rate}%)" for i, debt in enumerate(debts)])
@@ -87,6 +88,7 @@ class IndexView(LoginRequiredMixin, SelectedCompanyMixin, generic.TemplateView):
                 ],
             }
 
+            # requestsをrequestに変更するか
             api_response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
 
             if api_response.status_code == 200:
@@ -315,7 +317,6 @@ class FiscalSummary_YearUpdateView(LoginRequiredMixin, SelectedCompanyMixin, Upd
                     indicator_name,
                     value
                 )
-                print(f"score: {score}")
                 if score is not None:
                     if indicator_name == 'sales_growth_rate':
                         fiscal_summary_year.score_sales_growth_rate = score
@@ -1487,6 +1488,8 @@ class StockEventDetailView(LoginRequiredMixin, SelectedCompanyMixin, DetailView)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = '株式発行詳細'
+        # これに紐づくStockEventLineのデータを取得し、contextに含める
+        context['stock_event_line'] = self.object.details.all()
         return context
 
 class StockEventDeleteView(LoginRequiredMixin, SelectedCompanyMixin, DeleteView):
@@ -1514,6 +1517,70 @@ class StockEventDeleteView(LoginRequiredMixin, SelectedCompanyMixin, DeleteView)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = '株式発行削除確認'
+        return context
+
+
+##########################################################################
+###                 StockEventLine の View                              ###
+##########################################################################
+# StockEventから登録編集ができるようにする。
+
+class StockEventLineCreateView(LoginRequiredMixin, SelectedCompanyMixin, CreateView):
+    model = StockEventLine
+    form_class = StockEventLineForm
+    template_name = 'scoreai/stock_event_line_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.stock_event = get_object_or_404(StockEvent, pk=kwargs['stock_event_pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # 自社の株主だけが登録可能になるように制限
+        form.fields['stakeholder'].queryset = Stakeholder_name.objects.filter(company=self.this_company)
+        return form
+
+    def form_valid(self, form):
+        form.instance.stock_event = self.stock_event
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('stock_event_detail', kwargs={'pk': self.stock_event.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = '株式イベント明細の追加'
+        context['stock_event'] = self.stock_event
+        return context
+
+
+class StockEventLineUpdateView(LoginRequiredMixin, SelectedCompanyMixin, UpdateView):
+    model = StockEventLine
+    form_class = StockEventLineForm
+    template_name = 'scoreai/stock_event_line_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('stock_event_detail', kwargs={'pk': self.object.stock_event.pk})
+
+    def get_queryset(self):
+        return StockEventLine.objects.filter(stock_event__fiscal_summary_year__company=self.this_company)
+
+    def get_object(self, queryset=None):
+        obj = super(UpdateView, self).get_object(queryset)
+        if obj.stock_event.fiscal_summary_year.company != self.this_company:
+            raise PermissionDenied("この株式発行明細データを更新する権限がありません。")
+
+    def form_valid(self, form):
+        # fiscal_summary_yearの変更を防ぐ
+        form.instance.stock_event = self.object.stock_event
+        response = super().form_valid(form)
+        messages.success(self.request, f'株式発行明細データを更新しました。')
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stock_event'] = self.object.stock_event
+        context['title'] = '株式イベント明細の編集'
         return context
 
 ##########################################################################
@@ -1873,8 +1940,19 @@ def calculate_total_monthly_summaries(monthly_summaries, year_index=0, period_co
             'average_gross_profit_rate': 0,
         }
     # 引数から年を取得
-    year = monthly_summaries[year_index]['year']
-    
+    try:
+        year = monthly_summaries[year_index]['year']
+    except (IndexError, KeyError):
+        # yearが取得できない場合はNoneを返して終了
+        return {
+            'year': None,
+            'sum_sales': 0,
+            'sum_gross_profit': 0,
+            'sum_operating_profit': 0,
+            'average_ordinary_profit': 0,
+            'average_gross_profit_rate': 0,
+        }
+            
     # 各合計値を初期化
     sum_sales = 0.0
     sum_gross_profit = 0.0
@@ -1976,7 +2054,7 @@ def chat_view(request):
                 "model": "gpt-3.5-turbo",
                 "messages": [{"role": "user", "content": user_message}],
             }
-
+            # requestsをrequestに変更か
             api_response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
 
             if api_response.status_code == 200:
