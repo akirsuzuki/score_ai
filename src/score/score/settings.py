@@ -37,7 +37,7 @@ except ImportError:
     pass
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -99,7 +99,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'score.wsgi.application'
 
 
-# Database
+# Database 本番環境ようの記述に変更
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {

@@ -8,6 +8,13 @@
       {
         "ContainerPort": "8000"
       }
-    ]
+    ],
+    "Volumes": [
+        {
+          "HostDirectory": "/var/app/current",
+          "ContainerDirectory": "/app"
+        }
+    ],
+    "EntryPoint": ["python", "manage.py", "runserver", "0.0.0.0:8000"]
   }
   
