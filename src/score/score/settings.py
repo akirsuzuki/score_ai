@@ -26,8 +26,9 @@ try:
 except ImportError:
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY =  os.getenv('SECRET_KEY')
-    # Open AI
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'default_key')
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
     # EMAIL_HOST_USER = 'sth' or os.environ['EMAIL_HOST_USER']
     # EMAIL_HOST_PASSWORD = 'sth' or os.environ['EMAIL_HOST_PASSWORD']
     # STRIPE_PUBLIC_KEY = 'sth' or os.environ['STRIPE_PUBLIC_KEY']
@@ -35,12 +36,6 @@ except ImportError:
     # AWS_ACCESS_KEY_ID = 'sth' or os.environ['AWS_ACCESS_KEY_ID']
     # AWS_SECRET_ACCESS_KEY = 'sth' or os.environ['AWS_SECRET_ACCESS_KEY']
     pass
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -99,15 +94,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'score.wsgi.application'
 
 
-# Database 本番環境ようの記述に変更
+# Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'RDS_DB_NAME' in os.environ:
+    # 本番環境（RDS）
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
     }
-}
+else:
+    # ローカル環境（SQLite3）
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
