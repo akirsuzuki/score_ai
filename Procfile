@@ -1,0 +1,1 @@
+score-ai: gunicorn src.score.score.wsgi:application
