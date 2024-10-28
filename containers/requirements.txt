@@ -15,3 +15,4 @@ django-crispy-forms
 django-widget-tweaks
 django-select2
 crispy-bootstrap4
+psycopg2-binary
