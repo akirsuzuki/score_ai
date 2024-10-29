@@ -30,10 +30,17 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションコードをコピー
-COPY . /app
+# COPY . /app
+COPY ../src/ /app/
 
-# ポートを公開
+# 環境変数を設定（必要に応じて）
+ENV PYTHONUNBUFFERED=1
+
+# 静的ファイルを収集
+RUN python manage.py collectstatic --noinput
+
+# ポートを公開（Herokuでは不要だが、記載しても問題なし）
 EXPOSE 8000
 
 # アプリケーションを起動
-# CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD gunicorn score.wsgi --log-file - --bind 0.0.0.0:$PORT
