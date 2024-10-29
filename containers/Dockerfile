@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 # 依存関係のファイルをコピー
-COPY requirements.txt /app/
+COPY containers/requirements.txt /app/
 
 # Pythonの依存関係をインストール
 RUN pip install --no-cache-dir -r requirements.txt
@@ -37,7 +37,7 @@ COPY ../src/ /app/
 ENV PYTHONUNBUFFERED=1
 
 # 静的ファイルを収集
-RUN python manage.py collectstatic --noinput
+RUN python score/manage.py collectstatic --noinput
 
 # ポートを公開（Herokuでは不要だが、記載しても問題なし）
 EXPOSE 8000

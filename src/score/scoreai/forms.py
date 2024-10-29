@@ -183,7 +183,7 @@ class FiscalSummary_MonthForm(forms.ModelForm):
 class DebtForm(forms.ModelForm):
     issue_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='実行日')
     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='返済開始')
-    reschedule_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='リスケ日')
+    reschedule_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='リスケ日', required=False)
     class Meta:
         model = Debt
         fields = ['financial_institution', 'principal', 'issue_date', 'start_date', 'interest_rate', 'monthly_repayment', 'secured_type', 'adjusted_amount_first', 'adjusted_amount_last','is_rescheduled', 'reschedule_date', 'reschedule_balance', 'memo_short', 'memo_long', 'is_nodisplay']
