@@ -1,4 +1,4 @@
-Django==5.0.4
+Django==5.1.2
 pandas
 numpy
 requests
@@ -15,4 +15,6 @@ django-crispy-forms
 django-widget-tweaks
 django-select2
 crispy-bootstrap4
-
+psycopg2
+django_heroku
+dj-static
