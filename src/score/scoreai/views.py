@@ -333,7 +333,7 @@ class FiscalSummary_YearUpdateView(LoginRequiredMixin, SelectedCompanyMixin, Upd
 
         # インスタンスを再保存
         fiscal_summary_year.save()
-        messages.success(self.request, '財務スコアが正常に更新されました。')
+        messages.success(self.request, '財務情報が正常に更新されました。')
         return HttpResponseRedirect(self.get_success_url())
 
 

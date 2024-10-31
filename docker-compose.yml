@@ -6,7 +6,8 @@ services:
     build:
       context: ./containers    # Dockerfileがあるディレクトリまでの相対パス
       dockerfile: Dockerfile   # Dockerfileのファイル名
-    
+      args:
+        - BUILDKIT_PROGRESS=plain
     # 作成するコンテナ名の指定
     container_name: django
 

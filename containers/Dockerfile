@@ -14,6 +14,10 @@
 # ベースイメージを指定
 FROM python:3.12-slim
 
+# 作業ディレクトリを作成
+RUN mkdir -p /app
+# 依存関係のファイルをコピー
+COPY requirements.txt /app/
 # 作業ディレクトリを設定
 WORKDIR /app
 
@@ -23,24 +27,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
   && rm -rf /var/lib/apt/lists/*
 
-# 依存関係のファイルをコピー
-COPY containers/requirements.txt /app/
 
 # Pythonの依存関係をインストール
 RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションコードをコピー
-# COPY . /app
-COPY ../src/ /app/
+COPY . /app
+# COPY ./src/score/ /app
 
 # 環境変数を設定（必要に応じて）
 ENV PYTHONUNBUFFERED=1
 
+# デバッグ用: /app ディレクトリの内容を表示
+RUN ls -la /app
 # 静的ファイルを収集
-RUN python score/manage.py collectstatic --noinput
+# RUN python3 manage.py collectstatic --noinput
 
 # ポートを公開（Herokuでは不要だが、記載しても問題なし）
-EXPOSE 8000
+# EXPOSE 8000
 
 # アプリケーションを起動
-CMD gunicorn score.wsgi --log-file - --bind 0.0.0.0:$PORT
+# CMD gunicorn score.wsgi --log-file - --bind 0.0.0.0:$PORT

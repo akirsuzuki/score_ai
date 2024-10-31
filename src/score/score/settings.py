@@ -142,8 +142,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Herokuデプロイ
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -165,4 +163,6 @@ except ImportError:
     # STRIPE_SECRET_KEY = 'sth' or os.environ['STRIPE_SECRET_KEY']
     # AWS_ACCESS_KEY_ID = 'sth' or os.environ['AWS_ACCESS_KEY_ID']
     # AWS_SECRET_ACCESS_KEY = 'sth' or os.environ['AWS_SECRET_ACCESS_KEY']
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config()
     pass
