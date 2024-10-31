@@ -4,6 +4,6 @@ setup:
       as: DATABASE
 build:
   docker:
-    web: containers/Dockerfile
+    web: Dockerfile
 run:
   web: gunicorn score.wsgi --log-file -

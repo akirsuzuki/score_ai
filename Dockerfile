@@ -2,13 +2,13 @@
 FROM python:3.12-slim
 
 # 作業ディレクトリを作成
-RUN mkdir -p /app/src/score
+RUN mkdir -p /app
 
 # 依存関係のファイルをコピー
-COPY requirements.txt /app/src/score
+COPY containers/requirements.txt /app
 
 # 作業ディレクトリを設定
-WORKDIR /app/src/score
+WORKDIR /app
 
 # システム依存関係をインストール
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir -r ./requirements.txt
 
 # アプリケーションコードをコピー
-COPY . /app/src/score
+COPY . /app
 
 # 環境変数を設定（必要に応じて）
 ENV PYTHONUNBUFFERED=1
