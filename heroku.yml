@@ -2,8 +2,6 @@ setup:
   addons:
     - plan: heroku-postgresql
       as: DATABASE
-  config:
-    SECRET_KEY: os.environ['SECRET_KEY']
 build:
   docker:
     web: Dockerfile
