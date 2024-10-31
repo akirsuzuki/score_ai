@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,7 +38,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'widget_tweaks',
     'django_select2',
-    'django_heroku',
 ]
 
 
@@ -153,14 +151,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 try:
     from .local_settings import *
 except ImportError:
-    import environ
-
-    env = environ.Env()
-    environ.Env.read_env()
-
-    SECRET_KEY = env('SECRET_KEY')
-    # SECURITY WARNING: keep the secret key used in production secret!
-    # SECRET_KEY =  os.environ['SECRET_KEY']
+    SECRET_KEY = os.environ.get("SECRET_KEY")
     OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
     DEBUG = False
     ALLOWED_HOSTS = ['.herokuapp.com', '0.0.0.0', '127.0.0.1']
