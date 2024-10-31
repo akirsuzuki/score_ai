@@ -1,5 +1,0 @@
-build:
-  docker:
-    web: ../containers/Dockerfile
-run:
-  web: gunicorn score.wsgi --log-file -

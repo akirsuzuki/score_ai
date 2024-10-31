@@ -40,8 +40,10 @@ ENV PYTHONUNBUFFERED=1
 
 # デバッグ用: /app ディレクトリの内容を表示
 RUN ls -la /app
+
 # 静的ファイルを収集
-# RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py collectstatic --noinput
+CMD gunicorn --bind 0.0.0.0:$PORT app.wsgi
 
 # ポートを公開（Herokuでは不要だが、記載しても問題なし）
 # EXPOSE 8000
