@@ -29,7 +29,7 @@ ENV PYTHONUNBUFFERED=1
 RUN ls -la
 
 # 静的ファイルを収集
-RUN python3 manage.py collectstatic --noinput
+RUN python3 src/score/manage.py collectstatic --noinput
 
 # アプリケーションを起動
 CMD gunicorn --bind 0.0.0.0:$PORT app.wsgi
