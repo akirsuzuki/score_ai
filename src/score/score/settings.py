@@ -162,5 +162,6 @@ except ImportError:
     # AWS_ACCESS_KEY_ID = 'sth' or os.environ['AWS_ACCESS_KEY_ID']
     # AWS_SECRET_ACCESS_KEY = 'sth' or os.environ['AWS_SECRET_ACCESS_KEY']
     import dj_database_url
-    DATABASES['default'] = dj_database_url.config()
+    # DATABASES['default'] = dj_database_url.config()
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
     pass
