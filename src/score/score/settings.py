@@ -152,7 +152,7 @@ try:
     from .local_settings import *
 except ImportError:
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     DEBUG = False
     ALLOWED_HOSTS = ['.herokuapp.com', '0.0.0.0', '127.0.0.1']
     # EMAIL_HOST_USER = 'sth' or os.environ['EMAIL_HOST_USER']
