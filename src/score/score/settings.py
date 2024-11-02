@@ -133,13 +133,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # 収集元
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'src', 'score', 'static'),  # 静的ファイルが含まれている最上位ディレクトリ
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 # 収集先
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
