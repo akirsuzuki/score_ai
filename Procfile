@@ -1,1 +1,1 @@
-web: gunicorn src.score.score.wsgi:application --log-file -
+web: gunicorn app.src.score.score.wsgi:application --log-file -
