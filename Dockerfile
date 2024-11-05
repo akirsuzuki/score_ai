@@ -32,5 +32,5 @@ RUN ls -la
 RUN python3 src/score/manage.py collectstatic --noinput
 
 # アプリケーションを起動
-CMD gunicorn --bind 0.0.0.0:$PORT app.wsgi
+# CMD gunicorn --bind 0.0.0.0:$PORT app.wsgi
 
