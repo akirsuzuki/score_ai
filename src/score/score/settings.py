@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      # 以下追加
-    'scoreai',
     'rest_framework',
     'django_bootstrap5',
     'django.contrib.humanize',
